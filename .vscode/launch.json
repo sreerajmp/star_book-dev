@@ -1,0 +1,37 @@
+{
+  // Configurations to set the launch of `quran_talk` dart files in debug mode
+  // https://dartcode.org/docs/launch-configuration/
+  "version": "0.4.0",
+  "configurations": [
+    {
+      "name": "dev debug",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug", // "debug", "profile" or "release".
+		  "console": "debugConsole", // "debugConsole" or "terminal"
+      "args": [
+        "--dart-define", "flavor=dev", // --dart-define=flavor=dev
+      ],
+    }, 
+    {
+      "name": "prod debug",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+		  "console": "debugConsole",
+      "args": [
+        "--dart-define", "flavor=prod",
+      ],
+    },
+    {
+      "name": "dev release",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release", // "debug", "profile" or "release".
+		  "console": "debugConsole", // "debugConsole" or "terminal"
+      "args": [
+        "--dart-define", "flavor=dev", // --dart-define=flavor=dev
+      ],
+    }, 
+  ]
+}
