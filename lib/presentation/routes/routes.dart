@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:star_book/domain/models/mood/day.dart';
 import 'package:star_book/presentation/screen/analytics_screens/analytics_tab_bar_view.dart';
+import 'package:star_book/presentation/screen/heel_screen.dart';
 import 'package:star_book/presentation/screen/home_screen.dart';
 import 'package:star_book/presentation/screen/intro_screen.dart';
 import 'package:star_book/presentation/screen/journal_screens/journal_create_screen.dart';
@@ -82,7 +83,6 @@ class AppRouter {
           ),
           StatefulShellBranch(
             routes: [
-              /// ProfileScreen
               GoRoute(
                 path: ProfileScreenRoute.path,
                 builder: (context, state) {
@@ -124,6 +124,15 @@ class AppRouter {
               ),
             ],
           ),
+          StatefulShellBranch(routes: [
+            /// HeelScreen
+            GoRoute(
+                path: HeelScreenRoute.path,
+                builder: (context, state) {
+                  const arg = HeelScreenRoute();
+                  return const HeelScreen(arg: arg);
+                })
+          ])
         ],
       ),
 

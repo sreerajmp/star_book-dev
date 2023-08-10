@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:star_book/app_settings.dart';
-import 'package:star_book/presentation/injector/injector.dart';
-import 'package:star_book/presentation/routes/routes.dart';
-import 'package:star_book/presentation/theme/styling/theme_color_style.dart';
-import 'package:star_book/presentation/utils/extension.dart';
-import 'package:star_book/presentation/widgets/gradient_scaffold.dart';
+
+import '../injector/injector.dart';
+import '../routes/routes.dart';
+import '../theme/styling/theme_color_style.dart';
+import '../utils/extension.dart';
+import '../widgets/gradient_scaffold.dart';
 
 class SplashScreen extends StatefulWidget implements Screen<SplashScreenRoute> {
   @override
@@ -58,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen>
               width: 115,
             ),
             SizedBox(height: deviceHeight * 0.02),
-            Text('Starbook',
+            Text('Jam',
                 style: textTheme.headlineLarge!.copyWith(
                     fontWeight: FontWeight.w700,
                     color: themeColorStyle.secondaryColor)),

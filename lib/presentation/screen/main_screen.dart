@@ -15,8 +15,16 @@ class MainScreen extends StatelessWidget implements Screen<MainScreenRoute> {
     required this.child,
   });
 
+  // void _onItemTapped(int tabIndex) {
+  //   child.goBranch(tabIndex);
+  // }
+
   void _onItemTapped(int tabIndex) {
-    child.goBranch(tabIndex);
+    if (tabIndex == 3) {
+      child.goBranch(3); // Navigate to HeelScreenPage
+    } else {
+      child.goBranch(tabIndex);
+    }
   }
 
   static const tabs = [
@@ -32,6 +40,12 @@ class MainScreen extends StatelessWidget implements Screen<MainScreenRoute> {
       ),
       label: 'Profile',
     ),
+    GoRouteBottomNavBarItem(
+      icon: ImageIcon(
+        AssetImage('assets/icons/shooting_star.png'),
+      ),
+      label: 'Heel',
+    )
   ];
 
   @override

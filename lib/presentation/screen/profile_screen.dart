@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:star_book/domain/repository/journal_repo.dart';
+import 'package:star_book/domain/repository/user_repo.dart';
 import 'package:star_book/presentation/cubits/profile_screen_cubit.dart';
 import 'package:star_book/presentation/injector/injector.dart';
 import 'package:star_book/presentation/routes/routes.dart';
 import 'package:star_book/presentation/shared/app_bar.dart';
 import 'package:star_book/presentation/shared/doughnut_chart_widget.dart';
-import 'package:star_book/presentation/shared/stats_widget.dart';
 import 'package:star_book/presentation/theme/styling/theme_color_style.dart';
 import 'package:star_book/presentation/utils/extension.dart';
 import 'package:star_book/presentation/utils/padding_style.dart';
@@ -27,11 +27,13 @@ class ProfileScreen extends StatelessWidget
     return BlocProvider<ProfileScreenCubit>(
       create: (context) => ProfileScreenCubit(
         journalRepo: Injector.resolve<JournalRepo>(),
+        userRepo: Injector.resolve<UserRepo>(),
       ),
       child: BlocBuilder<ProfileScreenCubit, Points>(
         builder: (context, state) {
           final getPoints =
               context.read<ProfileScreenCubit>().getStreakAndPoint();
+          final userName = context.read<ProfileScreenCubit>().getUserName();
           return Scaffold(
             backgroundColor: Colors.transparent,
             appBar: SecondaryAppBar(
@@ -56,27 +58,29 @@ class ProfileScreen extends StatelessWidget
                           .copyWith(fontWeight: FontWeight.w400),
                     ),
                     SizedBox(height: deviceHeight * 0.007),
-                    Text(
-                      'Noor Ul Abedin 👋',
-                      style: textTheme.headlineLarge!.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: themeColorStyle.secondaryColor,
-                      ),
-                    ),
+                    // Text(
+                    //   'Noor Ul Abedin 👋',
+                    //   // userName,
+
+                    //   style: textTheme.headlineLarge!.copyWith(
+                    //     fontWeight: FontWeight.w700,
+                    //     color: themeColorStyle.secondaryColor,
+                    //   ),
+                    // ),
                     SizedBox(height: deviceHeight * 0.028),
-                    FutureBuilder(
-                      future: getPoints,
-                      builder: (context, snapshot) {
-                        return snapshot.hasData
-                            ? StatsWidget(
-                                pointsImagePath: 'assets/icons/crown.png',
-                                points: snapshot.data!.point,
-                                streakImagePath: 'assets/icons/fire.png',
-                                streak: snapshot.data!.streak,
-                              )
-                            : const SizedBox();
-                      },
-                    ),
+                    // FutureBuilder(
+                    //   future: getPoints,
+                    //   builder: (context, snapshot) {
+                    //     return snapshot.hasData
+                    //         ? StatsWidget(
+                    //             pointsImagePath: 'assets/icons/crown.png',
+                    //             points: snapshot.data!.point,
+                    //             streakImagePath: 'assets/icons/fire.png',
+                    //             streak: snapshot.data!.streak,
+                    //           )
+                    //         : const SizedBox();
+                    //   },
+                    // ),
                     SizedBox(height: deviceHeight * 0.045),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

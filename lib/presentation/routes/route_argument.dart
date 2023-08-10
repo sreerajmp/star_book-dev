@@ -82,6 +82,15 @@ class ProfileScreenRoute extends RouteArg {
   Uri get uri => Uri(path: path);
 }
 
+class HeelScreenRoute extends RouteArg {
+  static const String path = '/main/heel';
+
+  const HeelScreenRoute() : super();
+
+  @override
+  Uri get uri => Uri(path: path);
+}
+
 class AnalyticsScreenRoute extends RouteArg {
   static const String path = 'analytics';
 

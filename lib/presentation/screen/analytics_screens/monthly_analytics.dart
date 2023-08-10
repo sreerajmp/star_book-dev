@@ -23,7 +23,7 @@ class MonthlyAnalyticsTab extends StatelessWidget {
     return BlocProvider<AnalyticsScreenCubit>(
       create: (context) => AnalyticsScreenCubit(
         moodRepo: Injector.resolve<MoodRepo>(),
-      )..getMoodFrequencyByMonth(month: 5, year: 2023),
+      )..getMoodFrequencyByMonth(month: 8, year: 2023),
       child: BlocBuilder<AnalyticsScreenCubit, CubitState<MoodFrequency>>(
         builder: (context, state) {
           return state.when(
@@ -61,7 +61,20 @@ class SelectableTab extends StatefulWidget {
 class _SelectableTabState extends State<SelectableTab> {
   String selectedMonths = 'Jan';
 
-  final List<String> months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
+  final List<String> months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sept',
+    'Oct',
+    'Nov',
+    'Dec'
+  ];
 
   @override
   Widget build(BuildContext context) {

@@ -30,4 +30,10 @@ class UserRepoImpl implements UserRepo {
   Future<void> updateUser(String id, UserBody user) async {
     await lSUserApi.update(id, user.toLSUserBody);
   }
+
+  @override
+  Future<String> getUserName({required String userId}) async {
+    final user = await lSUserApi.fetch(userId);
+    return User.fromLSUser(user).name;
+  }
 }
