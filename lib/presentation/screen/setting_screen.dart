@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:star_book/app_settings.dart';
 import 'package:star_book/data/utils/local_database.dart';
 import 'package:star_book/presentation/injector/injector.dart';
@@ -97,33 +96,33 @@ class SettingsScreen extends StatelessWidget
                 );
               },
             ),
-            CustomTile(
-              title: 'Log Routes',
-              subtitle: 'Log Route tree',
-              onTap: () async {
-                // ignore: invalid_use_of_visible_for_testing_member
-                AppRouter.printPaths();
-              },
-            ),
+            // CustomTile(
+            //   title: 'Log Routes',
+            //   subtitle: 'Log Route tree',
+            //   onTap: () async {
+            //     // ignore: invalid_use_of_visible_for_testing_member
+            //     AppRouter.printPaths();
+            //   },
+            // ),
             // ],
             const Spacer(),
-            FutureBuilder<PackageInfo>(
-              future: PackageInfo.fromPlatform(),
-              builder: (context, sanpshot) {
-                if (!sanpshot.hasData) {
-                  return const SizedBox();
-                }
-                return Text(
-                  'App version ${sanpshot.data!.version} (${sanpshot.data!.buildNumber})',
-                  style: textTheme.bodyMedium!
-                      .copyWith(fontWeight: FontWeight.w400),
-                );
-              },
-            ),
+            // FutureBuilder<PackageInfo>(
+            //   future: PackageInfo.fromPlatform(),
+            //   builder: (context, sanpshot) {
+            //     if (!sanpshot.hasData) {
+            //       return const SizedBox();
+            //     }
+            //     return Text(
+            //       'App version ${sanpshot.data!.version} (${sanpshot.data!.buildNumber})',
+            //       style: textTheme.bodyMedium!
+            //           .copyWith(fontWeight: FontWeight.w400),
+            //     );
+            //   },
+            // ),
             const SizedBox(height: 10),
-            const BlocShipTile(),
+            // const BlocShipTile(),
             const SizedBox(height: 10),
-            const UxerShipTile(),
+            // const UxerShipTile(),
             const SizedBox(height: 30),
           ],
         ),

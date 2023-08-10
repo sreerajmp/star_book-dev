@@ -52,7 +52,7 @@ class _DoughnutChartWidgetState extends State<DoughnutChartWidget> {
           ),
           CircularChartAnnotation(
             widget: Text(
-              'Mood of the Month',
+              'Review your mood',
               textAlign: TextAlign.center,
               style: textTheme.labelLarge!.copyWith(
                 fontWeight: FontWeight.w400,

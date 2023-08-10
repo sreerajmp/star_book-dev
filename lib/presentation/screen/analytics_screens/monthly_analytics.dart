@@ -77,6 +77,7 @@ class _SelectableTabState extends State<SelectableTab> {
   ];
 
   @override
+  @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = context.textTheme;
     final ThemeColorStyle themeColorStyle = context.themeColorStyle;
@@ -85,38 +86,42 @@ class _SelectableTabState extends State<SelectableTab> {
     return BlocBuilder<AnalyticsScreenCubit, CubitState<MoodFrequency>>(
       builder: (context, state) {
         // final getMoodFreqByMonth = context.read<AnalyticsScreenCubit>().getMoodFrequencyByMonth(month: month, year: year);
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: months.map((month) {
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedMonths = month;
-                });
-              },
-              child: Container(
-                width: deviceWidth * 0.105,
-                height: deviceHeight * 0.03,
-                decoration: BoxDecoration(
-                  color: (month == selectedMonths)
-                      ? themeColorStyle.secondaryColor
-                      : themeColorStyle.secondaryColor.withOpacity(0.03),
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  month,
-                  style: textTheme.labelLarge!.copyWith(
-                    fontWeight: FontWeight.w400,
+        return SingleChildScrollView(
+          // Wrap the Row with SingleChildScrollView
+          scrollDirection: Axis.horizontal, // Scroll horizontally
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: months.map((month) {
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedMonths = month;
+                  });
+                },
+                child: Container(
+                  width: deviceWidth * 0.105,
+                  height: deviceHeight * 0.03,
+                  decoration: BoxDecoration(
                     color: (month == selectedMonths)
-                        ? themeColorStyle.quinaryColor
-                        : themeColorStyle.secondaryColor,
+                        ? themeColorStyle.secondaryColor
+                        : themeColorStyle.secondaryColor.withOpacity(0.03),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    month,
+                    style: textTheme.labelLarge!.copyWith(
+                      fontWeight: FontWeight.w400,
+                      color: (month == selectedMonths)
+                          ? themeColorStyle.quinaryColor
+                          : themeColorStyle.secondaryColor,
+                    ),
                   ),
                 ),
-              ),
-            );
-          }).toList(),
+              );
+            }).toList(),
+          ),
         );
       },
     );

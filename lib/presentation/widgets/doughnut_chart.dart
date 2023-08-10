@@ -1,11 +1,12 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:star_book/domain/models/mood/mood.dart';
 import 'package:star_book/domain/models/mood/mood_frequency.dart';
 import 'package:star_book/presentation/theme/styling/theme_color_style.dart';
 import 'package:star_book/presentation/utils/extension.dart';
 import 'package:star_book/presentation/widgets/arrow_indicator.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:star_book/domain/models/mood/mood.dart';
 
 class MoodDoughnutChart extends StatefulWidget {
   final Map<Mood, Frequency> moodDataMap;
@@ -47,22 +48,22 @@ class _MoodDoughnutChartState extends State<MoodDoughnutChart> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'Mood of The Month',
+                  'Your mood spectrum',
                   style: textTheme.bodySmall!
                       .copyWith(fontWeight: FontWeight.w400),
                 ),
-                Text(
-                  '45%', // Percentage based on calculation
-                  style: textTheme.headlineLarge!
-                      .copyWith(fontWeight: FontWeight.w700),
-                ),
-                Text(
-                  'Productive',
-                  style: textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: themeColorStyle.secondaryColor,
-                  ),
-                ),
+                // Text(
+                //   '45%', // Percentage based on calculation
+                //   style: textTheme.headlineLarge!
+                //       .copyWith(fontWeight: FontWeight.w700),
+                // ),
+                // Text(
+                //   'Productive',
+                //   style: textTheme.bodyMedium!.copyWith(
+                //     fontWeight: FontWeight.w500,
+                //     color: themeColorStyle.secondaryColor,
+                //   ),
+                // ),
               ],
             ),
           ),
