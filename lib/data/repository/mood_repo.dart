@@ -25,7 +25,7 @@ class MoodRepoImpl implements MoodRepo {
     for (var mood in moods) {
       list.add(Mood.fromLSMood(mood));
     }
-    return list;
+    return list.toSet().toList();
   }
 
   @override

@@ -142,84 +142,91 @@ class _MoodPickerBottomSheetState extends State<MoodPickerBottomSheet> {
         moodRepo: Injector.resolve<MoodRepo>(),
       )..fetchMoods(),
       child: BlocBuilder<MoodPickerBottomSheetCubit, CubitState<List<Mood>>>(
-          builder: (context, state) {
-        return state.maybeWhen(
-          orElse: () {
-            return const Loader();
-          },
-          loaded: (value) {
-            return Container(
-              height: deviceHeight * 0.61,
-              padding: const EdgeInsets.symmetric(
-                  horizontal: CustomPadding.mediumPadding),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40),
-                  topRight: Radius.circular(40),
-                ),
-              ),
-              child: Column(
-                children: [
-                  const SizedBox(height: 30),
-                  Container(
-                    width: deviceWidth * 0.2,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(50),
+        builder: (context, state) {
+          return state.maybeWhen(
+            orElse: () {
+              return const Loader();
+            },
+            loaded: (value) {
+              final uniqueMoods = value.toSet().toList();
+              return SingleChildScrollView(
+                child: Container(
+                  height: deviceHeight * 0.61,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: CustomPadding.mediumPadding),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(40),
+                      topRight: Radius.circular(40),
                     ),
                   ),
-                  const SizedBox(height: 30),
-                  SizedBox(
-                    height: 25,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          'Select Mood',
-                          style: textTheme.bodyLarge!.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: themeColorStyle.secondaryColor,
-                          ),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 30),
+                      Container(
+                        width: deviceWidth * 0.2,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(50),
                         ),
-                        SizedBox(width: deviceWidth * 0.27),
-                        GestureDetector(
-                          onTap: () => context.shouldPop(),
-                          child: Icon(
-                            Icons.close,
-                            color: themeColorStyle.secondaryColor,
-                          ),
+                      ),
+                      const SizedBox(height: 30),
+                      SizedBox(
+                        height: 25,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              'Select Mood',
+                              style: textTheme.bodyLarge!.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: themeColorStyle.secondaryColor,
+                              ),
+                            ),
+                            SizedBox(width: deviceWidth * 0.27),
+                            GestureDetector(
+                              onTap: () => context.shouldPop(),
+                              child: Icon(
+                                Icons.close,
+                                color: themeColorStyle.secondaryColor,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: CustomPadding.mediumPadding),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: value.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: CustomPadding.smallPadding),
-                        child: MoodTile(
-                          title: value[index].label,
-                          color: Color(value[index].color),
-                          // selectedMood: widget.selectedMood,
-                          isSelected:
-                              widget.selectedMood?.label == value[index].label,
-                          onTap: () {
-                            widget.onTap(value[index]);
+                      ),
+                      const SizedBox(height: CustomPadding.mediumPadding),
+                      Expanded(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: uniqueMoods.length,
+                          itemBuilder: (context, index) {
+                            final mood = uniqueMoods[index];
+
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: CustomPadding.smallPadding),
+                              child: MoodTile(
+                                title: mood.label,
+                                color: Color(mood.color),
+                                isSelected:
+                                    widget.selectedMood?.label == mood.label,
+                                onTap: () {
+                                  widget.onTap(mood);
+                                },
+                              ),
+                            );
                           },
                         ),
-                      );
-                    },
+                      )
+                    ],
                   ),
-                ],
-              ),
-            );
-          },
-        );
-      }),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
