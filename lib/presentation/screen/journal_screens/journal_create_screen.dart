@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:star_book/domain/models/journal/journal.dart';
 import 'package:star_book/domain/repository/journal_repo.dart';
 import 'package:star_book/presentation/cubits/cubit_state/cubit_state.dart';
@@ -31,6 +32,29 @@ class JournalCreateScreen extends StatefulWidget
 
 class _JournalCreateScreenState extends State<JournalCreateScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
+// final SpeechRecognition _speech = SpeechRecognition();
+  bool _hasSpeech = false;
+
+  final SpeechToText speech = SpeechToText();
+  Future<void> initSpeechState() async {
+    var hasSpeech = await speech.initialize(
+      // onError: errorListener,
+      // onStatus: statusListener,
+      debugLogging: true,
+    );
+    // if (hasSpeech) {
+    //   _localeNames = await speech.locales();
+
+    //   var systemLocale = await speech.systemLocale();
+    //   _currentLocaleId = systemLocale?.localeId ?? '';
+    // }
+
+    if (!mounted) return;
+
+    setState(() {
+      _hasSpeech = hasSpeech;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,13 +105,32 @@ class _JournalCreateScreenState extends State<JournalCreateScreen> {
                         ]),
                       ),
                       const SizedBox(height: 30),
+                      // CustomTextFormField(
+                      //   fieldKey: JournalFormModel.memoKey,
+                      //   heading: 'Note',
+                      //   label: 'Write Note',
+                      //   isMultiline: true,
+                      //   validator: FormValidator.required(),
+                      // ),
+
                       CustomTextFormField(
                         fieldKey: JournalFormModel.memoKey,
                         heading: 'Note',
                         label: 'Write Note',
                         isMultiline: true,
                         validator: FormValidator.required(),
+                        // Add IconButton for voice-to-text
+                        // suffixIcon: IconButton(
+                        //   icon: Icon(Icons.mic),
+                        //   onPressed: () {
+                        //     // Start speech recognition
+                        //     _hasSpeech
+                        //         ? speech.listen(localeId: "en_US")
+                        //         : initSpeechState(); // Adjust the locale if needed
+                        //   },
+                        // ),
                       ),
+
                       const SizedBox(height: 30),
                     ],
                   ),

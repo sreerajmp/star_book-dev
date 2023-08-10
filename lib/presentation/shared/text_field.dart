@@ -63,6 +63,7 @@ class CustomTextFormField extends StatefulWidget {
   final String fieldKey;
   final ValueChanged<String?>? onChanged;
   final FormFieldValidator<String>? validator;
+  final Widget? suffixIcon; // Add this line
 
   const CustomTextFormField({
     Key? key,
@@ -73,6 +74,7 @@ class CustomTextFormField extends StatefulWidget {
     required this.fieldKey,
     this.validator,
     this.onChanged,
+    this.suffixIcon, // Add this line
   })  : assert(label != null || initialValue != null,
             'Label and initialValue both cannot be null'),
         super(key: key);
@@ -83,6 +85,7 @@ class CustomTextFormField extends StatefulWidget {
 
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
   final FocusNode focusNode = FocusNode();
+  bool isSpeechEnabled = false;
 
   @override
   void initState() {
@@ -134,6 +137,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               border: const OutlineInputBorder(
                 borderSide: BorderSide.none,
               ),
+              // Use the provided suffix icon
+              suffixIcon: widget.suffixIcon,
             ),
           ),
         ],
@@ -141,6 +146,93 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     );
   }
 }
+
+// class CustomTextFormField extends StatefulWidget {
+//   final String heading;
+//   final String? label;
+//   final String? initialValue;
+//   final bool isMultiline;
+//   final String fieldKey;
+//   final ValueChanged<String?>? onChanged;
+//   final FormFieldValidator<String>? validator;
+
+//   const CustomTextFormField({
+//     Key? key,
+//     required this.heading,
+//     this.label,
+//     this.initialValue,
+//     this.isMultiline = false,
+//     required this.fieldKey,
+//     this.validator,
+//     this.onChanged,
+//   })  : assert(label != null || initialValue != null,
+//             'Label and initialValue both cannot be null'),
+//         super(key: key);
+
+//   @override
+//   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
+// }
+
+// class _CustomTextFormFieldState extends State<CustomTextFormField> {
+//   final FocusNode focusNode = FocusNode();
+
+//   @override
+//   void initState() {
+//     focusNode.addListener(() {
+//       setState(() {});
+//     });
+//     super.initState();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final TextTheme textTheme = context.textTheme;
+//     final ThemeColorStyle themeColorStyle = context.themeColorStyle;
+//     return Container(
+//       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12),
+//       decoration: BoxDecoration(
+//         borderRadius: BorderRadius.circular(8.0),
+//         border: Border.all(color: themeColorStyle.octonaryColor),
+//       ),
+//       child: Column(
+//         mainAxisSize: MainAxisSize.min,
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           AnimatedDefaultTextStyle(
+//             style: focusNode.hasFocus
+//                 ? textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w400)
+//                 : textTheme.bodyLarge!.copyWith(
+//                     fontWeight: FontWeight.w400,
+//                     color: themeColorStyle.secondaryColor,
+//                   ),
+//             duration: const Duration(milliseconds: 200),
+//             child: Text(widget.heading),
+//           ),
+//           const SizedBox(height: 16),
+//           FormBuilderTextField(
+//             name: widget.fieldKey,
+//             maxLines: widget.isMultiline ? null : 1,
+//             initialValue: widget.initialValue,
+//             focusNode: focusNode,
+//             onChanged: widget.onChanged,
+//             validator: widget.validator,
+//             keyboardType: TextInputType.multiline,
+//             decoration: InputDecoration(
+//               contentPadding: EdgeInsets.zero,
+//               isDense: true,
+//               hintText: widget.label ?? '',
+//               hintStyle:
+//                   textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w400),
+//               border: const OutlineInputBorder(
+//                 borderSide: BorderSide.none,
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class SelectableTile extends StatelessWidget {
   final String title;

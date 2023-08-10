@@ -15,7 +15,13 @@ class HeelScreen extends StatelessWidget implements Screen<HeelScreenRoute> {
   Widget build(BuildContext context) {
     final TextTheme textTheme = context.textTheme;
     final ThemeColorStyle themeColorStyle = context.themeColorStyle;
-
+    final List<String> questions = [
+      'How are you feeling today?',
+      'Did you get enough sleep last night?',
+      'Have you engaged in any physical activity recently?',
+      'Are you connecting with friends and family?',
+      'Have you tried any relaxation techniques lately?',
+    ];
     return Scaffold(
       appBar: SecondaryAppBar(
         leading: const Image(
@@ -36,9 +42,11 @@ class HeelScreen extends StatelessWidget implements Screen<HeelScreenRoute> {
                 style: TextStyle(fontSize: 18),
               ),
             ),
-            for (var questionIndex = 0; questionIndex < 5; questionIndex++)
+            for (var questionIndex = 0;
+                questionIndex < questions.length;
+                questionIndex++)
               QuestionWidget(
-                question: 'Question ${questionIndex + 1}:',
+                question: questions[questionIndex],
                 options: [
                   'Excellent',
                   'Good',
@@ -47,9 +55,10 @@ class HeelScreen extends StatelessWidget implements Screen<HeelScreenRoute> {
                   'Very Poor',
                 ],
                 onAnswerSelected: (answerIndex) {
-                  // Provide suggestions based on the answer
-                  String suggestion = getSuggestion(answerIndex);
-                  // Show the suggestion using a dialog or other UI element
+                  String suggestion = getSuggestion(
+                    questions[questionIndex],
+                    answerIndex,
+                  );
                   showDialog(
                     context: context,
                     builder: (context) {
@@ -75,17 +84,17 @@ class HeelScreen extends StatelessWidget implements Screen<HeelScreenRoute> {
     );
   }
 
-  String getSuggestion(int answerIndex) {
+  String getSuggestion(String question, int answerIndex) {
     if (answerIndex == 0) {
-      return 'You are doing great! Keep up the positive mindset.';
+      return 'For the question "$question", you are doing great! Keep up the positive mindset.';
     } else if (answerIndex == 1) {
-      return 'Your mental health is in a good place. Maintain healthy habits.';
+      return 'For the question "$question", your mental health is in a good place. Maintain healthy habits.';
     } else if (answerIndex == 2) {
-      return 'It\'s important to take care of your mental well-being. Consider seeking support if needed.';
+      return 'For the question "$question", it\'s important to take care of your mental well-being. Consider seeking support if needed.';
     } else if (answerIndex == 3) {
-      return 'You\'ve indicated your mental health could be better. Reach out to someone for assistance.';
+      return 'For the question "$question", you\'ve indicated your mental health could be better. Reach out to someone for assistance.';
     } else if (answerIndex == 4) {
-      return 'Your mental health seems to be struggling. Please consider talking to a professional.';
+      return 'For the question "$question", your mental health seems to be struggling. Please consider talking to a professional.';
     } else {
       return 'Unknown answer';
     }
