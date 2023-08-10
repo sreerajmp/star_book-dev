@@ -38,8 +38,10 @@ class HeelScreen extends StatelessWidget implements Screen<HeelScreenRoute> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                'How is your mental health?',
-                style: TextStyle(fontSize: 18),
+                'Knowing yourself is the best remedy',
+                textAlign: TextAlign.center,
+                style: textTheme.headlineMedium!
+                    .copyWith(fontWeight: FontWeight.w800),
               ),
             ),
             for (var questionIndex = 0;
