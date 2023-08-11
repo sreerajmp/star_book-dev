@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:star_book/domain/models/journal/journal.dart';
 import 'package:star_book/domain/repository/journal_repo.dart';
@@ -32,22 +33,20 @@ class JournalCreateScreen extends StatefulWidget
 
 class _JournalCreateScreenState extends State<JournalCreateScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
-// final SpeechRecognition _speech = SpeechRecognition();
   bool _hasSpeech = false;
 
   final SpeechToText speech = SpeechToText();
+
+  @override
+  void initState() {
+    super.initState();
+    initSpeechState();
+  }
+
   Future<void> initSpeechState() async {
     var hasSpeech = await speech.initialize(
-      // onError: errorListener,
-      // onStatus: statusListener,
       debugLogging: true,
     );
-    // if (hasSpeech) {
-    //   _localeNames = await speech.locales();
-
-    //   var systemLocale = await speech.systemLocale();
-    //   _currentLocaleId = systemLocale?.localeId ?? '';
-    // }
 
     if (!mounted) return;
 
@@ -65,7 +64,6 @@ class _JournalCreateScreenState extends State<JournalCreateScreen> {
       ),
       child: BlocBuilder<JournalCreateCubit, CubitState<Journal>>(
         builder: (context, state) {
-          // final addJournal = context.read<JournalCreateCubit>().addJournal();
           return Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: PrimaryAppBar(
@@ -89,7 +87,6 @@ class _JournalCreateScreenState extends State<JournalCreateScreen> {
                       CustomDatePickerFormField(
                         name: JournalFormModel.createdAtKey,
                       ),
-                      // FormBuilderDateTimePicker(name: name),
                       const SizedBox(height: 30),
                       MoodPickerFormField(
                         name: JournalFormModel.moodKey,
@@ -105,32 +102,23 @@ class _JournalCreateScreenState extends State<JournalCreateScreen> {
                         ]),
                       ),
                       const SizedBox(height: 30),
-                      // CustomTextFormField(
-                      //   fieldKey: JournalFormModel.memoKey,
-                      //   heading: 'Note',
-                      //   label: 'Write Note',
-                      //   isMultiline: true,
-                      //   validator: FormValidator.required(),
-                      // ),
-
                       CustomTextFormField(
                         fieldKey: JournalFormModel.memoKey,
                         heading: 'Note',
                         label: 'Write Note',
                         isMultiline: true,
                         validator: FormValidator.required(),
-                        // Add IconButton for voice-to-text
-                        // suffixIcon: IconButton(
-                        //   icon: Icon(Icons.mic),
-                        //   onPressed: () {
-                        //     // Start speech recognition
-                        //     _hasSpeech
-                        //         ? speech.listen(localeId: "en_US")
-                        //         : initSpeechState(); // Adjust the locale if needed
-                        //   },
-                        // ),
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.mic),
+                          onPressed: () {
+                            if (_hasSpeech) {
+                              startSpeechRecognition();
+                            } else {
+                              initSpeechState();
+                            }
+                          },
+                        ),
                       ),
-
                       const SizedBox(height: 30),
                     ],
                   ),
@@ -141,8 +129,7 @@ class _JournalCreateScreenState extends State<JournalCreateScreen> {
               onTap: () async {
                 await context.read<JournalCreateCubit>().addJournal();
 
-                /// Don't use 'BuildContext's across async gaps
-                /// we can use .then() for solving this warning
+                // Using .then() to ensure context availability
                 context.shouldPop();
               },
               child: const Icon(Icons.check),
@@ -151,6 +138,31 @@ class _JournalCreateScreenState extends State<JournalCreateScreen> {
         },
       ),
     );
+  }
+
+  void startSpeechRecognition() {
+    speech.listen(
+      localeId: "en_US",
+      onResult: resultListener,
+    );
+  }
+
+  void resultListener(SpeechRecognitionResult result) {
+    print("result.finalResult");
+    print(result.finalResult);
+    print(result.recognizedWords);
+
+    // Get the current value of the memo field
+    if (result.finalResult) {
+      String currentMemo =
+          _formKey.currentState?.fields[JournalFormModel.memoKey]?.value ?? '';
+
+      // Append the newly recognized text to the existing memo
+      String updatedMemo = '$currentMemo ${result.recognizedWords}';
+
+      _formKey.currentState?.fields[JournalFormModel.memoKey]
+          ?.didChange(updatedMemo);
+    }
   }
 }
 

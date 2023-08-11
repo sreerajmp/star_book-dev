@@ -36,6 +36,7 @@ dependencies:
   url_launcher: ^6.1.11
   package_info_plus: ^4.0.2
   speech_to_text: ^6.3.0
+  animations: ^2.0.7
 
 dev_dependencies:
   flutter_test:
