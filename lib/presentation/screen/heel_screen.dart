@@ -5,23 +5,32 @@ import '../routes/routes.dart';
 import '../shared/app_bar.dart';
 import '../theme/styling/theme_color_style.dart';
 
-class HeelScreen extends StatelessWidget implements Screen<HeelScreenRoute> {
+class HeelScreen extends StatefulWidget implements Screen<HeelScreenRoute> {
   @override
   final HeelScreenRoute arg;
 
   const HeelScreen({super.key, required this.arg});
 
   @override
+  _HeelScreenState createState() => _HeelScreenState();
+}
+
+class _HeelScreenState extends State<HeelScreen> {
+  final List<String> questions = [
+    '😃 How are you feeling today?',
+    '💤 Did you get enough sleep last night?',
+    '🏃 Have you engaged in any physical activity recently?',
+    '👨‍👩‍👧‍👦 Are you connecting with friends and family?',
+    '🧘 Have you tried any relaxation techniques lately?',
+  ];
+
+  List<int> answers = List.filled(5, -1);
+
+  @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = context.textTheme;
     final ThemeColorStyle themeColorStyle = context.themeColorStyle;
-    final List<String> questions = [
-      'How are you feeling today?',
-      'Did you get enough sleep last night?',
-      'Have you engaged in any physical activity recently?',
-      'Are you connecting with friends and family?',
-      'Have you tried any relaxation techniques lately?',
-    ];
+
     return Scaffold(
       appBar: SecondaryAppBar(
         leading: const Image(
@@ -50,34 +59,20 @@ class HeelScreen extends StatelessWidget implements Screen<HeelScreenRoute> {
               QuestionWidget(
                 question: questions[questionIndex],
                 options: [
-                  'Excellent',
-                  'Good',
-                  'Average',
-                  'Poor',
-                  'Very Poor',
+                  '😄 Excellent',
+                  '😊 Good',
+                  '😐 Average',
+                  '😕 Poor',
+                  '😞 Very Poor',
                 ],
                 onAnswerSelected: (answerIndex) {
-                  String suggestion = getSuggestion(
-                    questions[questionIndex],
-                    answerIndex,
-                  );
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text('Suggestion'),
-                        content: Text(suggestion),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
+                  setState(() {
+                    answers[questionIndex] = answerIndex;
+                  });
+
+                  if (areAllQuestionsAnswered()) {
+                    _showSuggestionDialog();
+                  }
                 },
               ),
           ],
@@ -86,20 +81,52 @@ class HeelScreen extends StatelessWidget implements Screen<HeelScreenRoute> {
     );
   }
 
-  String getSuggestion(String question, int answerIndex) {
-    if (answerIndex == 0) {
-      return 'For the question "$question", you are doing great! Keep up the positive mindset.';
-    } else if (answerIndex == 1) {
-      return 'For the question "$question", your mental health is in a good place. Maintain healthy habits.';
-    } else if (answerIndex == 2) {
-      return 'For the question "$question", it\'s important to take care of your mental well-being. Consider seeking support if needed.';
-    } else if (answerIndex == 3) {
-      return 'For the question "$question", you\'ve indicated your mental health could be better. Reach out to someone for assistance.';
-    } else if (answerIndex == 4) {
-      return 'For the question "$question", your mental health seems to be struggling. Please consider talking to a professional.';
+  bool areAllQuestionsAnswered() {
+    return answers.every((answer) => answer != -1);
+  }
+
+  void _showSuggestionDialog() {
+    String overallSuggestion = getOverallSuggestion(answers);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Complete Suggestion'),
+          content: Text(overallSuggestion),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  String getOverallSuggestion(List<int> answers) {
+    int totalScore = answers.fold(0, (sum, answer) => sum + answer);
+
+    String suggestion = '';
+
+    if (totalScore >= 0 && totalScore <= 5) {
+      suggestion =
+          '🌟 You are doing great! Keep up the positive mindset. Try taking a leisurely walk in nature to refresh your mind and body.';
+    } else if (totalScore >= 6 && totalScore <= 10) {
+      suggestion =
+          '🌈 Your mental health is in a good place. Maintain healthy habits. Consider trying out a new hobby or spending quality time with loved ones.';
+    } else if (totalScore >= 11 && totalScore <= 15) {
+      suggestion =
+          '🌱 It\'s important to take care of your mental well-being. Consider seeking support if needed. Try practicing mindfulness meditation or enjoying a soothing cup of herbal tea.';
     } else {
-      return 'Unknown answer';
+      suggestion =
+          '🌻 Your mental health seems to be struggling. Please consider talking to a professional. Additionally, engage in activities you enjoy, connect with loved ones, and practice deep breathing exercises.';
     }
+
+    return suggestion;
   }
 }
 
