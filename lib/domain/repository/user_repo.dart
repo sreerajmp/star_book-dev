@@ -6,5 +6,5 @@ abstract class UserRepo extends BaseRepo {
   Future<void> deleteUser(String userId);
   Future<void> updateUser(String id, UserBody user);
   Future<void> createUser(UserBody user);
-  Future<String> getUserName({required String userId});
+  // Future<String> getUserName({required String userId});
 }

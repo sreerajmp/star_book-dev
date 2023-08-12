@@ -8,7 +8,7 @@ import 'package:star_book/presentation/utils/extension.dart';
 import 'package:star_book/presentation/widgets/arrow_indicator.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class MoodDoughnutChart extends StatefulWidget {
+class MoodDoughnutChart extends StatelessWidget {
   final Map<Mood, Frequency> moodDataMap;
 
   const MoodDoughnutChart({
@@ -17,19 +17,39 @@ class MoodDoughnutChart extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<MoodDoughnutChart> createState() => _MoodDoughnutChartState();
-}
-
-class _MoodDoughnutChartState extends State<MoodDoughnutChart> {
-  @override
   Widget build(BuildContext context) {
     List<MoodData> moodList = [];
-    widget.moodDataMap
+    moodDataMap
         .forEach((k, v) => moodList.add(MoodData(mood: k, frequency: v)));
-    // print('moodList: ${widget.moodDataMap.entries.map((e) => e.value)}');
-    List<Frequency> yValues =
-        widget.moodDataMap.entries.map((e) => e.value).toList();
-    // print('yValues: $yValues');
+
+    if (moodList.isEmpty) {
+      return Center(
+        child: Text(
+          "Fill up your emotions to the journal to know overall mood",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+      );
+    }
+
+    List<Frequency> yValues = moodDataMap.entries.map((e) => e.value).toList();
+    double highestSectorPercentage = 0.0;
+    String highestSectorName = '';
+
+    int highestSectorIndex = 0;
+    Frequency highestSectorValue = yValues[0];
+
+    for (int i = 1; i < yValues.length; i++) {
+      if (yValues[i] > highestSectorValue) {
+        highestSectorIndex = i;
+        highestSectorValue = yValues[i];
+      }
+    }
+
+    highestSectorName = moodList[highestSectorIndex].mood.label;
+
+    Frequency totalValue = yValues.reduce((a, b) => a + b);
+    highestSectorPercentage = (highestSectorValue / totalValue) * 100;
+
     final TextTheme textTheme = context.textTheme;
     final ThemeColorStyle themeColorStyle = context.themeColorStyle;
     final double deviceWidth = context.deviceWidth;
@@ -52,18 +72,18 @@ class _MoodDoughnutChartState extends State<MoodDoughnutChart> {
                   style: textTheme.bodySmall!
                       .copyWith(fontWeight: FontWeight.w400),
                 ),
-                // Text(
-                //   '45%', // Percentage based on calculation
-                //   style: textTheme.headlineLarge!
-                //       .copyWith(fontWeight: FontWeight.w700),
-                // ),
-                // Text(
-                //   'Productive',
-                //   style: textTheme.bodyMedium!.copyWith(
-                //     fontWeight: FontWeight.w500,
-                //     color: themeColorStyle.secondaryColor,
-                //   ),
-                // ),
+                Text(
+                  '${highestSectorPercentage.toStringAsFixed(0)}%', // Percentage based on calculation
+                  style: textTheme.headlineLarge!
+                      .copyWith(fontWeight: FontWeight.w700),
+                ),
+                Text(
+                  highestSectorName,
+                  style: textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: themeColorStyle.secondaryColor,
+                  ),
+                ),
               ],
             ),
           ),
@@ -74,21 +94,16 @@ class _MoodDoughnutChartState extends State<MoodDoughnutChart> {
           animationDuration: 0,
           dataSource: moodList,
           xValueMapper: (MoodData data, _) {
-            // print('Mood: ${data.mood.label}');
             return data.mood.label;
           },
           yValueMapper: (MoodData data, _) {
-            // print('Frequency: ${data.frequency}');
             return data.frequency;
           },
           pointColorMapper: (datum, index) {
             List<int> colorList =
-                widget.moodDataMap.entries.map((e) => e.key.color).toList();
-            // print('Color: ${colorList[index]}');
+                moodDataMap.entries.map((e) => e.key.color).toList();
             return Color(colorList[index]);
           },
-
-          /// Radius of doughnut
           radius: '105%',
           innerRadius: '60%',
         ),
@@ -96,16 +111,10 @@ class _MoodDoughnutChartState extends State<MoodDoughnutChart> {
     );
   }
 
-  /// For getting the center angle of the highest sector
   double getHighestSectorCenterAngle(List<Frequency> sectorValues) {
-    /// The index of highest sector
     int highestSectorIndex = 0;
-
-    /// Initially, first sector supposed to be the highest
-    /// value.
     Frequency highestSectorValue = sectorValues[0];
 
-    /// Finding the index of the highest sector and its value
     for (int i = 1; i < sectorValues.length; i++) {
       if (sectorValues[i] > highestSectorValue) {
         highestSectorIndex = i;
@@ -113,24 +122,16 @@ class _MoodDoughnutChartState extends State<MoodDoughnutChart> {
       }
     }
 
-    /// Calculating the starting and ending angles for each sector
-    /// Store List of sectors angles
     List<double> sectorAngles = [];
-
-    /// Get the sum of sector values
     Frequency totalValue = sectorValues.reduce((a, b) => a + b);
-
-    /// Use for startAngle
     double startAngle = 0;
 
-    /// Getting Starting Angle
     for (int i = 0; i < sectorValues.length; i++) {
       double sectorAngle = (sectorValues[i] / totalValue) * 2 * pi;
       sectorAngles.add(startAngle + sectorAngle);
       startAngle += sectorAngle;
     }
 
-    /// Calculating the center point angle of the highest sector
     double centerAngle = 0.0;
     if (highestSectorIndex == 0) {
       centerAngle = sectorAngles[highestSectorIndex] / 2;
@@ -142,24 +143,6 @@ class _MoodDoughnutChartState extends State<MoodDoughnutChart> {
     return centerAngle;
   }
 }
-
-class ChartData {
-  final MoodFrequency moodFrequency;
-
-  const ChartData({required this.moodFrequency});
-}
-
-// class ChartData {
-//   ChartData({
-//     required this.x,
-//     this.y = 2.0,
-//     required this.color,
-//   });
-//
-//   final String x;
-//   final double y;
-//   final Color color;
-// }
 
 class MoodData {
   final Mood mood;

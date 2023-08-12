@@ -18,12 +18,14 @@ class MonthlyAnalyticsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double deviceHeight = context.deviceHeight;
-    // final DoughnutChartStyle doughnutChartStyle = context.doughnutChartStyle;
+
+    // Get the current month
+    final currentMonth = DateTime.now().month;
 
     return BlocProvider<AnalyticsScreenCubit>(
       create: (context) => AnalyticsScreenCubit(
         moodRepo: Injector.resolve<MoodRepo>(),
-      )..getMoodFrequencyByMonth(month: 8, year: 2023),
+      )..getMoodFrequencyByMonth(month: currentMonth, year: 2023),
       child: BlocBuilder<AnalyticsScreenCubit, CubitState<MoodFrequency>>(
         builder: (context, state) {
           return state.when(
@@ -59,7 +61,7 @@ class SelectableTab extends StatefulWidget {
 }
 
 class _SelectableTabState extends State<SelectableTab> {
-  String selectedMonths = 'Jan';
+  String selectedMonth = ''; // Initially empty
 
   final List<String> months = [
     'Jan',
@@ -77,17 +79,22 @@ class _SelectableTabState extends State<SelectableTab> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    // Set the selected month to the current month
+    selectedMonth = months[DateTime.now().month - 1]; // Months are 1-indexed
+  }
+
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = context.textTheme;
     final ThemeColorStyle themeColorStyle = context.themeColorStyle;
     final double deviceHeight = context.deviceHeight;
     final double deviceWidth = context.deviceWidth;
+
     return BlocBuilder<AnalyticsScreenCubit, CubitState<MoodFrequency>>(
       builder: (context, state) {
-        // final getMoodFreqByMonth = context.read<AnalyticsScreenCubit>().getMoodFrequencyByMonth(month: month, year: year);
         return SingleChildScrollView(
-          // Wrap the Row with SingleChildScrollView
           scrollDirection: Axis.horizontal, // Scroll horizontally
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -96,14 +103,23 @@ class _SelectableTabState extends State<SelectableTab> {
               return GestureDetector(
                 onTap: () {
                   setState(() {
-                    selectedMonths = month;
+                    selectedMonth = month;
                   });
+
+                  final year = DateTime.now().year;
+
+                  // Call the getMoodFrequencyByMonth with the selected month and year
+                  context.read<AnalyticsScreenCubit>().getMoodFrequencyByMonth(
+                        month:
+                            months.indexOf(month) + 1, // Months are 1-indexed
+                        year: year,
+                      );
                 },
                 child: Container(
                   width: deviceWidth * 0.105,
                   height: deviceHeight * 0.03,
                   decoration: BoxDecoration(
-                    color: (month == selectedMonths)
+                    color: (month == selectedMonth)
                         ? themeColorStyle.secondaryColor
                         : themeColorStyle.secondaryColor.withOpacity(0.03),
                     borderRadius: BorderRadius.circular(100),
@@ -113,7 +129,7 @@ class _SelectableTabState extends State<SelectableTab> {
                     month,
                     style: textTheme.labelLarge!.copyWith(
                       fontWeight: FontWeight.w400,
-                      color: (month == selectedMonths)
+                      color: (month == selectedMonth)
                           ? themeColorStyle.quinaryColor
                           : themeColorStyle.secondaryColor,
                     ),

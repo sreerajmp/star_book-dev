@@ -39,7 +39,7 @@ class WeeklyAnalyticsTab extends StatelessWidget {
                     children: [
                       MoodDoughnutChart(moodDataMap: mood.info),
                       SizedBox(height: deviceHeight * 0.05),
-                      const SelectableTab(),
+                      // const SelectableTab(),
                       SizedBox(height: deviceHeight * 0.03),
                       const LegendsChart(),
                     ],

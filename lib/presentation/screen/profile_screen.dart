@@ -33,7 +33,7 @@ class ProfileScreen extends StatelessWidget
         builder: (context, state) {
           final getPoints =
               context.read<ProfileScreenCubit>().getStreakAndPoint();
-          final userName = context.read<ProfileScreenCubit>().getUserName();
+          // final userName = context.read<ProfileScreenCubit>().getUserName();
           return Scaffold(
             backgroundColor: Colors.transparent,
             appBar: SecondaryAppBar(
